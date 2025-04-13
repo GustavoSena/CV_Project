@@ -1,0 +1,13 @@
+{
+  "name": "cv-pdf-generator",
+  "version": "1.0.0",
+  "description": "Converts HTML CV to PDF with A4 size",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "puppeteer": "^22.8.2",
+    "sharp": "^0.34.1"
+  }
+}

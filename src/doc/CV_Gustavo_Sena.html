@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gustavo Sena</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            line-height: 1.2;
+            color: #333;
+            height: 297mm; /* Fixed A4 height */
+            width: 210mm; /* Fixed A4 width */
+            overflow: hidden;
+            box-sizing: border-box;
+            page-break-after: avoid;
+            position: relative;
+        }
+
+
+        .sidebar {
+            background: #1A365C;
+            width: 30%;
+            padding: 6mm 4mm;
+            color: white;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            height: 100%; /* Full height */
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            z-index: 1; /* Ensure sidebar is on top */
+        }
+
+        /* Add a pseudo-element to extend the sidebar background */
+        body::before {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 30%;
+            background: #1A365C;
+            z-index: 0;
+            height: 100%;
+        }
+
+
+        .main-content {
+            height: 100%;
+            overflow: hidden;
+            width: 70%;
+            padding: 30px;
+            font-size: 0.99em;
+            margin-left: 0;
+            margin-right: 30%;
+        }
+
+        h1 {
+            font-size: 25px;
+            margin: 0 0 2px 0;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #1A365C;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            color: #1A365C;
+            border-bottom: 2px solid #1A365C;
+            padding-bottom: 3px;
+            margin: 15px 0 10px 0;
+            font-weight: bold;
+        }
+
+        table.experience {
+            width: 100%;
+            margin-bottom: 15px;
+            border-spacing: 0;
+            font-size: 12px;
+        }
+
+        table.experience td {
+            vertical-align: top;
+            padding: 1px 0;
+        }
+        
+        /* Add separator style for experience items */
+        table.experience.with-separator {
+            border-bottom: 1px solid #D6EAF8;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+        }
+
+        .company {
+            font-weight: bold;
+            color: #153090;
+            font-size: 12px;
+        }
+
+        .location {
+            float: right;
+            font-style: italic;
+            color: #666;
+            font-size: 12px;
+        }
+
+        ul {
+            margin: 5px 0 12px 0;
+            padding-left: 18px;
+        }
+
+        ul li {
+            margin: 2px 0;
+            line-height: 1.3;
+        }
+
+        .contact-info {
+            margin-bottom: 12px;
+            font-size: 11px;
+        }
+        
+        .contact-info div {
+            margin: 5px 0;
+        }
+
+        .skills {
+            columns: 2;
+            margin: 8px 0 12px 0; /* Normalized spacing */
+            font-size: 11px;
+        }
+
+        .skill-item {
+            break-inside: avoid;
+            margin: 3px 0;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .skill-item:after {
+            content: "·";
+            margin: 0 4px;
+            color: white;
+        }
+
+        .skill-item:last-child:after {
+            content: "";
+        }
+
+        .photo {
+            width: 100px; /* Increased from 80px */
+            height: 100px; /* Increased from 80px */
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .language-table {
+            width: 100%;
+            font-size: 11px;
+        }
+
+        .language-table td {
+            padding: 3px 0;
+        }
+
+        .stars {
+            color: #FFD700;
+            letter-spacing: 2px;
+            font-size: 13px;
+        }
+
+        .circle-container {
+            display: flex;
+            gap: 2px;
+        }
+
+        .circle {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .filled {
+            background: #FFD700;
+            /* Gold */
+        }
+
+        .empty {
+            background: #4A6579;
+            /* Dark gray */
+        }
+
+        /* Reduce the size of titles in main content sections */
+        .main-content table.experience strong {
+            font-size: 13.5px; /* Reduced from 15px to be smaller than section titles (14px) */
+            display: inline-block;
+            margin-bottom: 2px;
+            color: #1A365C; /* Added color to match section titles */
+        }
+
+        /* Add a general bullet styling class that can be applied to all sections */
+        ul.styled-bullets {
+            margin: 3px 25px 10px 0;
+            padding-left: 0px;
+            list-style: none;
+        }
+
+        ul.styled-bullets li {
+            position: relative;
+            margin: 3px 0;
+            line-height: 1.3;
+            padding-left: 14px;
+            color: #555;
+        }
+
+        /* First item alignment fix */
+        ul.styled-bullets li:first-child {
+            padding-left: 0px !important;
+            margin-left: 0;
+        }
+
+        /* Bullet styling for non-first items */
+        ul.styled-bullets li:not(:first-child)::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #888;
+            padding-left: 1px;
+            font-size: 9pt;
+        }
+
+        ul.experience-bullets {
+            margin: 3px 25px 10px 0;
+            padding-left: 8px;
+            list-style: none;
+        }
+
+        ul.experience-bullets li {
+            position: relative;
+            margin: 4px 0;
+            line-height: 1.3;
+            padding-left: 28px;
+            color: #555;
+        }
+
+        /* First item alignment fix */
+        ul.experience-bullets li:first-child {
+            padding-left: 0px !important;
+            margin-left: 0;
+        }
+
+        /* Bullet styling for non-first items */
+        ul.experience-bullets li:not(:first-child)::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #888;
+            padding-left: 1px;
+            font-size: 9pt;
+        }
+
+        /* Sidebar section spacing */
+        .sidebar .section-title {
+            margin: 12px 0 8px 0;
+            color: white; 
+            border-color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>GUSTAVO SENA</h1>
+        <div class="subtitle">Blockchain Developer</div>
+
+        <!-- EXPERIENCE -->
+        <div class="section-title">EXPERIENCE</div>
+
+        <!-- GBL Tech Experience -->
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%"><strong>Blockchain Developer</strong><br>
+                    <span class="company">GBL Tech</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>12/2023 - Present</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>Working in a project for Cefiocus focused on microservices and their integration with public
+                            and private blockchains:</li>
+                        <li>Developing SmartContract for IoT use cases</li>
+                        <li>Testing and optimizing smartcontract code</li>
+                        <li>Developing microservices to integrate blockchain technology with existing systems</li>
+                        <li>Research and design a private and permissioned DLT system</li>
+                        <li>Techstack: Solidity, Java, Springboot, Kotlin, Typescript, Go (Golang), Docker, Git</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Exaud Experience -->
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%"><strong>Blockchain Developer</strong><br>
+                    <span class="company">Exaud</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>08/2022 - 12/2023</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li> Worked on a project to develop a borrow and lending platform based on liquidity management
+                            investments on various blockchains and protocols:</li>
+                        <li>Developing Smart Contracts for Liquidity Management on Ethereum</li>
+                        <li>Working with NFTs and Cryptocurrencies</li>
+                        <li>Handling Security and Optimization of the Smart Contracts</li>
+                        <li>Handle integration between the Frontend and Backend with the Blockchain</li>
+                        <li>Test Smartcontract code</li>
+                        <li>Design and develop analytics scripts to determine earning possibilities in diverse liquidity
+                            pools</li>
+                        <li>Techstack: Solidity, Typescript, Hardhat, NestJs, ExpressJs, React, Git</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <!-- FEUP Experience -->
+        <table class="experience">
+            <tr>
+                <td style="width: 70%"><strong>Recreative and Cultural Department member</strong><br>
+                    <span class="company">Students Association of FEUP</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>06/2019 - 06/2023</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>Worked to improve the students experience at FEUP</li>
+                        <li>Participated in the organization and planning of numerous events</li>
+                        <li>Helped guide new members</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <!-- Add other experience blocks here -->
+        <!-- EDUCATION -->
+        <div class="section-title">EDUCATION</div>
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%"><strong>MSc in Informatics and Computing Engineering</strong><br>
+                    <span class="company">Faculty of Engineering of University of Porto</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>09/2021 - Present</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>GPA: 15.2/20</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <table class="experience">
+            <tr>
+                <td style="width: 70%"><strong>BSc in Informatics and Computing Engineering</strong><br>
+                    <span class="company">Faculty of Engineering of University of Porto</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>09/2018 - 06/2021</td>
+            </tr>
+        </table>
+
+        <!-- VOLUNTEERING -->
+        <div class="section-title">VOLUNTEERING</div>
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%"><strong>Participated in cleaning activities</strong><br>
+                    <span class="company">Foca</span>
+                </td>
+                <td style="text-align: right" class="location">2019</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>Beach and Forest Cleaning</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <table class="experience">
+            <tr>
+                <td style="width: 70%"><strong>Tree planting</strong><br>
+                    <span class="company">Foca</span>
+                </td>
+                <td style="text-align: right" class="location">2019</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>Planted trees in slopes to strengthen the hillside</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+
+    <!-- Right Blue Sidebar -->
+    <div class="sidebar">
+        <div class="photo">
+            <img src="gustavo-photo.jpg" alt="Gustavo Sena Portrait"
+                style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div class="section-title">CONTACT INFO</div>
+        <div class="contact-info">
+            <div>+351916202254</div>
+            <div>gustavosena.work@gmail.com</div>
+            <div>Porto, PT</div>
+        </div>
+        <!-- SUMMARY -->
+        <div class="section-title">SUMMARY</div>
+        <table class="experience">
+            <tr>
+                <td colspan="2">
+                    <ul style="list-style: none; padding-left: 0">
+                        <li>Blockchain Developer at GBL Tech. Fast learner with a growth and problem-solving mindset and
+                            a strong bias toward action.</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div class="section-title">LANGUAGES</div>
+        <table class="language-table">
+            <tr>
+                <td>Portuguese</td>
+                <td>
+                    <span class="circle-container">
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>English</td>
+                <td>
+                    <span class="circle-container">
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle empty"></span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>Spanish</td>
+                <td>
+                    <span class="circle-container">
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle empty"></span>
+                        <span class="circle empty"></span>
+                        <span class="circle empty"></span>
+                    </span>
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-title">SKILLS</div>
+        <div class="skills">
+            <span class="skill-item">Blockchain</span>
+            <span class="skill-item">C/C++</span>
+            <span class="skill-item">Ethereum</span>
+            <span class="skill-item">Git</span>
+            <span class="skill-item">Java</span>
+            <span class="skill-item">JavaScript</span>
+            <span class="skill-item">Latex</span>
+            <span class="skill-item">Python</span>
+            <span class="skill-item">SmartContracts</span>
+            <span class="skill-item">Solidity</span>
+            <span class="skill-item">SQL</span>
+            <span class="skill-item">TypeScript</span>
+            <span class="skill-item">Microservices</span>
+            <span class="skill-item">Golang</span>
+            <span class="skill-item">Docker</span>
+            <span class="skill-item">Kanban</span>
+            <span class="skill-item">Scrum</span>
+        </div>
+        <!-- FIND ME ONLINE -->
+        <div class="section-title">FIND ME ONLINE</div>
+        <div class="contact-info" style="margin-bottom: 12px">
+            <div>
+                <strong>LinkedIn</strong><br>
+                <a href="https://linkedin.com/in/gustavosenamendes" target="_blank"
+                    style="color: white; text-decoration: underline;">
+                    linkedin.com/in/gustavosenamendes
+                </a>
+            </div>
+            <div style="margin-top: 8px">
+                <strong>GitHub</strong><br>
+                <a href="https://github.com/GustavoSena" target="_blank"
+                    style="color: white; text-decoration: underline;">
+                    github.com/GustavoSena
+                </a>
+            </div>
+        </div>
+
+        <!-- INTERESTS -->
+        <div class="section-title">INTERESTS</div>
+        <div class="skills" style="columns: 1">
+            <span class="skill-item">Crypto research</span>
+            <span class="skill-item">Formula 1</span>
+            <span class="skill-item">Boardgames</span>
+            <span class="skill-item">Travelling</span>
+            <span class="skill-item">Basketball</span>
+        </div>
+    </div>
+
+</body>
+
+</html>
