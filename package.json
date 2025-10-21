@@ -4,7 +4,10 @@
   "description": "Converts HTML CV to PDF with A4 size",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "render": "node src/renderAnswers.js",
+    "render:md": "node src/renderAnswers.js -f md",
+    "render:text": "node src/renderAnswers.js -f text"
   },
   "dependencies": {
     "puppeteer": "^22.8.2",

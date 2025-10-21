@@ -69,7 +69,7 @@ async function generatePDFForFile(htmlFilePath, browser) {
               height: 100
             },
             type: 'jpeg',
-            quality: 70,
+            quality: 100,
             omitBackground: true
           });
           
