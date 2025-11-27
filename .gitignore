@@ -2,6 +2,7 @@
 node_modules/
 
 # Output files
+output/
 src/output/
 
 # Environment variables

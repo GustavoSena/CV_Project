@@ -30,81 +30,15 @@ async function generatePDFForFile(htmlFilePath, browser) {
       
       if (fs.existsSync(imgPath)) {
         try {
-          // Create a temporary HTML file for image optimization
-          const tempHtmlPath = path.join(__dirname, 'temp_image.html');
-          fs.writeFileSync(tempHtmlPath, `
-            <html>
-              <head>
-                <style>
-                  body { margin: 0; padding: 0; }
-                  .container { width: 100px; height: 100px; overflow: hidden; }
-                  img { width: 100px; height: 100px; object-fit: cover; }
-                </style>
-              </head>
-              <body>
-                <div class="container">
-                  <img src="file:///${path.resolve(imgPath).replace(/\\/g, '/')}" alt="Image">
-                </div>
-              </body>
-            </html>
-          `);
-          
-          // Create a page for image optimization
-          const imagePage = await browser.newPage();
-          
-          // Navigate to the temporary HTML file
-          await imagePage.goto(`file:///${path.resolve(tempHtmlPath).replace(/\\/g, '/')}`, {
-            waitUntil: 'networkidle0'
-          });
-          
-          // Wait for the image to load
-          await imagePage.waitForSelector('img');
-          
-          // Take a screenshot of just the image container
-          const screenshotBuffer = await imagePage.screenshot({
-            clip: {
-              x: 0,
-              y: 0,
-              width: 100,
-              height: 100
-            },
-            type: 'jpeg',
-            quality: 70,
-            omitBackground: true
-          });
-          
-          // Close the page
-          await imagePage.close();
-          
-          // Clean up the temporary HTML file
-          try {
-            fs.unlinkSync(tempHtmlPath);
-          } catch (e) {
-            console.warn('Could not delete temporary HTML file:', e);
-          }
-          
-          // Convert the screenshot to a data URL
-          const base64Data = screenshotBuffer.toString('base64');
-          const dataUrl = `data:image/jpeg;base64,${base64Data}`;
-          
-          // Replace the image source with the data URL
+          // Direct high-quality image embedding
+          const imgBuffer = fs.readFileSync(imgPath);
+          const mimeType = getContentType(imgPath);
+          const base64Data = imgBuffer.toString('base64');
+          const dataUrl = `data:${mimeType};base64,${base64Data}`;
           htmlContent = htmlContent.replace(new RegExp(escapeRegExp(imgSrc), 'g'), dataUrl);
-          console.log(`Successfully embedded optimized image: ${imgSrc}`);
+          console.log(`Successfully embedded high-quality image: ${imgSrc}`);
         } catch (imgError) {
-          console.warn(`Error optimizing image ${imgPath}:`, imgError);
-          
-          // Fallback to direct embedding if optimization fails
-          try {
-            console.log('Falling back to direct image embedding');
-            const imgBuffer = fs.readFileSync(imgPath);
-            const mimeType = getContentType(imgPath);
-            const base64Data = imgBuffer.toString('base64');
-            const dataUrl = `data:${mimeType};base64,${base64Data}`;
-            htmlContent = htmlContent.replace(new RegExp(escapeRegExp(imgSrc), 'g'), dataUrl);
-            console.log(`Successfully embedded image using fallback: ${imgSrc}`);
-          } catch (fallbackError) {
-            console.error(`Fallback image embedding failed: ${fallbackError}`);
-          }
+          console.error(`Error embedding image ${imgPath}:`, imgError);
         }
       } else {
         console.warn(`Image not found: ${imgPath}`);
@@ -119,11 +53,11 @@ async function generatePDFForFile(htmlFilePath, browser) {
       waitUntil: 'networkidle0'
     });
 
-    // Set viewport to A4 size (A4 is 210mm × 297mm)
+    // Set viewport to A4 size (A4 is 210mm × 297mm) with high DPI for quality
     await page.setViewport({
       width: Math.round(210 * 3.779528),
       height: Math.round(297 * 3.779528),
-      deviceScaleFactor: 1,
+      deviceScaleFactor: 2, // 2x for better image quality
     });
 
     // Add custom CSS to ensure the sidebar extends to the edge
@@ -164,7 +98,7 @@ async function generatePDFForFile(htmlFilePath, browser) {
       fs.mkdirSync(outputDir);
     }
 
-    // Generate the PDF file with extreme optimization settings
+    // Generate the PDF file with high quality settings
     const outputPath = path.join(outputDir, `${fileName}.pdf`);
     await page.pdf({
       path: outputPath,
@@ -180,9 +114,6 @@ async function generatePDFForFile(htmlFilePath, browser) {
       scale: 1.0,
       omitBackground: false,
       displayHeaderFooter: false,
-      compress: true,
-      quality: 50,
-      dpi: 72,
       pageRanges: '1' // Only print the first page
     });
 
@@ -220,7 +151,7 @@ function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
-async function generatePDFs() {
+async function generatePDFs(specificFile = null) {
   // Launch a headless browser with specific args to reduce PDF size
   const browser = await puppeteer.launch({
     args: [
@@ -241,18 +172,31 @@ async function generatePDFs() {
       return;
     }
     
-    // Read all files in the doc directory
-    const files = fs.readdirSync(docDir);
+    let htmlFiles;
     
-    // Filter for HTML files
-    const htmlFiles = files.filter(file => path.extname(file).toLowerCase() === '.html');
-    
-    if (htmlFiles.length === 0) {
-      console.log('No HTML files found in the doc directory.');
-      return;
+    // If a specific file is provided, only process that file
+    if (specificFile) {
+      const targetFile = specificFile.endsWith('.html') ? specificFile : `${specificFile}.html`;
+      if (!fs.existsSync(path.join(docDir, targetFile))) {
+        console.error(`File not found: ${targetFile}`);
+        return;
+      }
+      htmlFiles = [targetFile];
+      console.log(`Processing specific file: ${targetFile}`);
+    } else {
+      // Read all files in the doc directory
+      const files = fs.readdirSync(docDir);
+      
+      // Filter for HTML files
+      htmlFiles = files.filter(file => path.extname(file).toLowerCase() === '.html');
+      
+      if (htmlFiles.length === 0) {
+        console.log('No HTML files found in the doc directory.');
+        return;
+      }
+      
+      console.log(`Found ${htmlFiles.length} HTML files to process.`);
     }
-    
-    console.log(`Found ${htmlFiles.length} HTML files to process.`);
     
     // Process each HTML file
     for (const htmlFile of htmlFiles) {
@@ -269,7 +213,11 @@ async function generatePDFs() {
   }
 }
 
+// Parse CLI arguments - get specific file if provided
+const args = process.argv.slice(2);
+const specificFile = args.length > 0 ? args[0] : null;
+
 // Execute the function
-generatePDFs().catch(error => {
+generatePDFs(specificFile).catch(error => {
   console.error('Error in main process:', error);
 });
