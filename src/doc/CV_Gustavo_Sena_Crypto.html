@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Gustavo Sena</title>
+    <title>Gustavo Sena - Blockchain Developer</title>
     <style>
         @page {
             size: A4;
@@ -145,7 +145,7 @@
 
         .skills {
             columns: 2;
-            margin: 8px 0 12px 0; /* Normalized spacing */
+            margin: 8px 0 12px 0;
             font-size: 11px;
         }
 
@@ -211,20 +211,18 @@
 
         .filled {
             background: #FFD700;
-            /* Gold */
         }
 
         .empty {
             background: #4A6579;
-            /* Dark gray */
         }
 
         /* Reduce the size of titles in main content sections */
         .main-content table.experience strong {
-            font-size: 13.5px; /* Reduced from 15px to be smaller than section titles (14px) */
+            font-size: 13.5px;
             display: inline-block;
             margin-bottom: 2px;
-            color: #1A365C; /* Added color to match section titles */
+            color: #1A365C;
         }
 
         /* Add a general bullet styling class that can be applied to all sections */
@@ -294,6 +292,21 @@
             color: white; 
             border-color: white;
         }
+
+        /* Sidebar skills list - single column for blockchain tech */
+        .skills-single {
+            margin: 8px 0 12px 0;
+            font-size: 10.5px;
+        }
+
+        .skills-single .skill-item {
+            display: block;
+            margin: 2px 0;
+        }
+
+        .skills-single .skill-item:after {
+            content: "";
+        }
     </style>
 </head>
 
@@ -318,11 +331,13 @@
             <tr>
                 <td colspan="2">
                     <ul class="styled-bullets">
-                        <li>Designing and implementing a blockchain based payments solution for a Content Sharing Platform:</li>
-                        <li>Developed the Smartcontracts, implemented security checks, tests and optimizations</li>
-                        <li>Redesigned the payment flow, including the database</li>
-                        <li>Researched, contacted and negotiated with the need service providers</li>
-                        <li>Techstack: Typescript, Solidity, React, NestJs, Git, Docker, AWS</li>
+                        <li>Designed and developed a blockchain-based payments solution for a Content Sharing Platform:</li>
+                        <li>Developed smart contracts for payments, onramping and offramping of assets</li>
+                        <li>Implemented fee sponsorship for users, using Biconomy (leveraging EIP-7702)</li>
+                        <li>Integrated Dynamic.xyz for wallet infrastructure (JWT authentication)</li>
+                        <li>Designed and developed a private onramp system integrating Stripe and SIBS</li>
+                        <li>Deployed on Base (OP Stack L2)</li>
+                        <li>Stack: Solidity, TypeScript, React, NestJS, ethers.js, viem</li>
                     </ul>
                 </td>
             </tr>
@@ -339,13 +354,11 @@
             <tr>
                 <td colspan="2">
                     <ul class="styled-bullets">
-                        <li>Working in a project for Cefiocus focused on microservices and their integration with public
-                            and private blockchains:</li>
-                        <li>Developing SmartContract for IoT use cases</li>
-                        <li>Testing and optimizing smartcontract code</li>
-                        <li>Developing microservices to integrate blockchain technology with existing systems</li>
-                        <li>Research and design a private and permissioned DLT system</li>
-                        <li>Techstack: Solidity, Java, Springboot, Kotlin, Typescript, Go (Golang), Docker, Git</li>
+                        <li>Enterprise blockchain integrations for Cefiocus focused on IoT and DLT systems:</li>
+                        <li>Developed smart contracts for IoT use cases on public and private blockchains</li>
+                        <li>Built microservices bridging blockchain technology with existing enterprise systems</li>
+                        <li>Researched and designed a private, permissioned DLT architecture</li>
+                        <li>Stack: Solidity, Go, Java, Spring Boot, Kotlin, TypeScript, Docker</li>
                     </ul>
                 </td>
             </tr>
@@ -355,44 +368,59 @@
         <table class="experience with-separator">
             <tr>
                 <td style="width: 70%"><strong>Blockchain Developer</strong><br>
-                    <span class="company">Exaud</span>
+                    <span class="company">Exaud</span> <span style="color: #666; font-size: 11px;">(Client: Wellfield)</span>
                 </td>
                 <td style="text-align: right" class="location">Porto, PT<br>08/2022 - 12/2023</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <ul class="styled-bullets">
-                        <li> Worked on a project to develop a borrow and lending platform based on liquidity management
-                            investments on various blockchains and protocols:</li>
-                        <li>Developed Smart Contracts for Liquidity Management on Ethereum</li>
-                        <li>Handled Security and Optimization of the Smart Contracts</li>
-                        <li>Handled integration between the Frontend and Backend with the Blockchain</li>
-                        <li>Tested Smartcontract code</li>
-                        <li>Designed and developed analytics scripts to determine earning possibilities in diverse liquidity
-                            pools</li>
-                        <li>Techstack: Solidity, Typescript, Hardhat, NestJs, ExpressJs, React, Git</li>
+                        <li>Built a lending/borrowing platform for Uniswap v3 LP position investments:</li>
+                        <li>Developed smart contracts integrating Uniswap v2, v3, and Pharaoh Exchange</li>
+                        <li>Integrated Chainlink Price Oracles and Automation for stop-loss/take-profit</li>
+                        <li>Deployed on Ethereum and Avalanche C-Chain</li>
+                        <li>Applied security tooling: Slither, Mythril, Echidna for fuzzing</li>
+                        <li>Stack: Solidity, TypeScript, Hardhat, Foundry, NestJS, React</li>
                     </ul>
                 </td>
             </tr>
         </table>
 
-        <!-- FEUP Experience -->
-        <table class="experience">
+        <!-- Personal Projects -->
+        <div class="section-title">PERSONAL PROJECTS & CONSULTANCY</div>
+        <table class="experience with-separator">
             <tr>
-                <td style="width: 70%"><strong>Recreative and Cultural Department member</strong><br>
-                    <span class="company">Students Association of FEUP</span>
+                <td style="width: 70%"><strong>ArenaBadges</strong><br>
+                    <span class="company">Personal Project</span>
                 </td>
-                <td style="text-align: right" class="location">Porto, PT<br>06/2019 - 06/2023</td>
+                <td style="text-align: right" class="location">2025</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <ul class="styled-bullets">
-                        <li>Worked to improve the students experience at FEUP</li>
-                        <li>Participated in the organization and planning of numerous events</li>
+                        <li>Developed an Arena badge assignment system based on on-chain metrics and wallet information, for Arena Social (Stack: TypeScript, NestJS, ethers.js, Alchemy)</li>
                     </ul>
                 </td>
             </tr>
         </table>
+
+        <table class="experience">
+            <tr>
+                <td style="width: 70%"><strong>Blockchain Consultancy</strong><br>
+                    <span class="company">Independent</span>
+                </td>
+                <td style="text-align: right" class="location">2023 - Present</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>Provided technical consultancy to various clients in the blockchain space</li>
+                        <li>Clients include a Senior Product Manager at Fireblocks</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
         <!-- EDUCATION -->
         <div class="section-title">EDUCATION</div>
         <table class="experience with-separator">
@@ -400,12 +428,13 @@
                 <td style="width: 70%"><strong>MSc in Informatics and Computing Engineering</strong><br>
                     <span class="company">Faculty of Engineering of University of Porto</span>
                 </td>
-                <td style="text-align: right" class="location">Porto, PT<br>09/2021 - Present</td>
+                <td style="text-align: right" class="location">Porto, PT<br>09/2021 - 07/2025</td>
             </tr>
             <tr>
                 <td colspan="2">
                     <ul class="styled-bullets">
                         <li>GPA: 15.2/20</li>
+                        <li>Thesis: Gas Optimization in Solidity Smart Contracts (unpublished)</li>
                     </ul>
                 </td>
             </tr>
@@ -420,33 +449,12 @@
             </tr>
         </table>
 
-        <!-- VOLUNTEERING -->
-        <div class="section-title">VOLUNTEERING</div>
-        <table class="experience with-separator">
-            <tr>
-                <td style="width: 70%"><strong>Beach and Forest Cleaning</strong><br>
-                    <span class="company">Foca</span>
-                </td>
-                <td style="text-align: right" class="location">2019</td>
-            </tr>
-        </table>
-
-        <table class="experience">
-            <tr>
-                <td style="width: 70%"><strong>Tree planting - Slope reinforcement</strong><br>
-                    <span class="company">Foca</span>
-                </td>
-                <td style="text-align: right" class="location">2019</td>
-            </tr>
-        </table>
-
-
     </div>
 
     <!-- Right Blue Sidebar -->
     <div class="sidebar">
         <div class="photo">
-            <img src="gustavo-photo.jpg" alt="Gustavo Sena Portrait"
+            <img src="gustavo-photo2.jpeg" alt="Gustavo Sena Portrait"
                 style="width: 100%; height: 100%; object-fit: cover;">
         </div>
         <div class="section-title">CONTACT INFO</div>
@@ -460,13 +468,44 @@
         <table class="experience">
             <tr>
                 <td colspan="2">
-                    <ul style="list-style: none; padding-left: 0">
-                        Senior Blockchain Engineer at OnlyHighIQ Fast learner with a growth and problem-solving mindset and
-                            a strong bias toward action.
+                    <ul style="list-style: none; padding-left: 0; font-size: 10px;">
+                        Solidity/DeFi engineer with over 3 years of production experience. 
+                        Deployments on Ethereum, Avalanche, and Base. 
+                        Strong focus on security, gas optimization, and DeFi integrations.
                     </ul>
                 </td>
             </tr>
         </table>
+
+        <div class="section-title">NETWORKS</div>
+        <div class="skills-single">
+            <span class="skill-item">Ethereum</span>
+            <span class="skill-item">Avalanche C-Chain</span>
+            <span class="skill-item">Base (OP Stack)</span>
+        </div>
+
+        <div class="section-title">PROTOCOLS & INTEGRATIONS</div>
+        <div class="skills-single">
+            <span class="skill-item">Uniswap v2 / v3</span>
+            <span class="skill-item">Pharaoh Exchange</span>
+            <span class="skill-item">Chainlink (Oracles, Automation, VRF)</span>
+            <span class="skill-item">Dynamic.xyz</span>
+            <span class="skill-item">Biconomy (AA, Sponsorship)</span>
+            <span class="skill-item">Chainalysis</span>
+            <span class="skill-item">Alchemy</span>
+        </div>
+
+        <div class="section-title">DEV & SECURITY</div>
+        <div class="skills-single">
+            <span class="skill-item">Solidity</span>
+            <span class="skill-item">Hardhat / Foundry</span>
+            <span class="skill-item">ethers.js / viem</span>
+            <span class="skill-item">Slither / Mythril</span>
+            <span class="skill-item">Echidna (Fuzzing)</span>
+            <span class="skill-item">Proxy Patterns (EIP-1967)</span>
+            <span class="skill-item">Account Abstraction (EIP-4337 & EIP7702)</span>
+        </div>
+
         <div class="section-title">LANGUAGES</div>
         <table class="language-table">
             <tr>
@@ -507,35 +546,6 @@
             </tr>
         </table>
 
-        <div class="section-title">TECHNICAL SKILLS</div>
-        <div class="skills">
-            <span class="skill-item">Blockchain</span>
-            <span class="skill-item">SmartContracts</span>
-            <span class="skill-item">React</span>
-            <span class="skill-item">JavaScript</span>
-            <span class="skill-item">Git</span>
-            <span class="skill-item">Java</span>
-            <span class="skill-item">Latex</span>
-            <span class="skill-item">Python</span>
-
-            <span class="skill-item">Solidity</span>
-            <span class="skill-item">TypeScript</span>
-            <span class="skill-item">Docker</span>
-            <span class="skill-item">AWS</span>
-            <span class="skill-item">SQL</span>
-            <span class="skill-item">Microservices</span>
-            <span class="skill-item">Golang</span>
-            <span class="skill-item">Scrum</span>
-        </div>
-        <div class="section-title">SOFT SKILLS</div>
-        <div class="skills">
-            <span class="skill-item">Teamwork</span>
-            <span class="skill-item">Problem-solving</span>
-            <span class="skill-item">Leadership</span>
-            <span class="skill-item">Adaptability</span>
-            <span class="skill-item">Communication</span>
-            <span class="skill-item">Organization</span>
-        </div>    
         <!-- FIND ME ONLINE -->
         <div class="section-title">FIND ME ONLINE</div>
         <div class="contact-info" style="margin-bottom: 12px">
@@ -553,16 +563,6 @@
                     github.com/GustavoSena
                 </a>
             </div>
-        </div>
-
-        <!-- INTERESTS -->
-        <div class="section-title">INTERESTS</div>
-        <div class="skills" >
-            <span class="skill-item">Crypto research</span>
-            <span class="skill-item">Formula 1</span>
-            <span class="skill-item">Boardgames</span>
-            <span class="skill-item">Travelling</span>
-            <span class="skill-item">Basketball</span>
         </div>
     </div>
 
