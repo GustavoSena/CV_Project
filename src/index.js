@@ -2,157 +2,82 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
-async function generatePDFForFile(htmlFilePath, browser) {
-  // Extract the filename without extension for the output PDF name
-  const fileName = path.basename(htmlFilePath, '.html');
-  
-  // Get the directory containing the HTML file
-  const htmlDir = path.dirname(htmlFilePath);
+const { inlineCssLinks } = require('./utils/inlineCssLinks');
+const { embedImagesAsDataUrls } = require('./utils/embedImagesAsDataUrls');
+const { injectCvData } = require('./utils/injectCvData');
+const { buildCvFromJson } = require('./utils/buildCvFromJson');
+
+/**
+ * Generate PDF from a JSON data file (new approach)
+ */
+async function generatePDFFromJson(jsonFilePath, browser) {
+  const docDir = path.join(__dirname, 'doc');
+  const templatesDir = path.join(docDir, 'templates');
+  const componentsDir = path.join(docDir, 'components');
   
   try {
-    // Read the HTML content
-    let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
+    // Load CV data from JSON
+    const cvData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+    const outputName = cvData.meta?.outputName || path.basename(jsonFilePath, '.json');
     
-    // Process image references directly
-    const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/g;
-    let match;
-    let originalHtmlContent = htmlContent;
-    
-    while ((match = imgRegex.exec(originalHtmlContent)) !== null) {
-      const imgSrc = match[1];
-      
-      // Skip if it's already a data URL
-      if (imgSrc.startsWith('data:')) continue;
-      
-      // Get the absolute path to the image
-      const imgPath = path.join(htmlDir, imgSrc);
-      console.log(`Processing image: ${imgSrc}, full path: ${imgPath}`);
-      
-      if (fs.existsSync(imgPath)) {
-        try {
-          // Direct high-quality image embedding
-          const imgBuffer = fs.readFileSync(imgPath);
-          const mimeType = getContentType(imgPath);
-          const base64Data = imgBuffer.toString('base64');
-          const dataUrl = `data:${mimeType};base64,${base64Data}`;
-          htmlContent = htmlContent.replace(new RegExp(escapeRegExp(imgSrc), 'g'), dataUrl);
-          console.log(`Successfully embedded high-quality image: ${imgSrc}`);
-        } catch (imgError) {
-          console.error(`Error embedding image ${imgPath}:`, imgError);
-        }
-      } else {
-        console.warn(`Image not found: ${imgPath}`);
-      }
-    }
-    
-    // Create a new page for PDF generation
-    const page = await browser.newPage();
-    
-    // Set content to the page with embedded images
-    await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0'
-    });
+    console.log(`Building CV from JSON: ${path.basename(jsonFilePath)}`);
 
-    // Set viewport to A4 size (A4 is 210mm × 297mm) with high DPI for quality
+    // Build HTML from layout template + components + data
+    const layoutPath = path.join(templatesDir, 'cv-layout.html');
+    let htmlContent = buildCvFromJson(cvData, layoutPath, componentsDir, console);
+
+    // Inline CSS (resolve relative to templates dir, then try doc dir)
+    htmlContent = inlineCssLinks(htmlContent, templatesDir, console);
+
+    // Embed images (resolve relative to doc dir where photos are)
+    htmlContent = embedImagesAsDataUrls(htmlContent, docDir, console);
+
+    // Create page and set content
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+
+    // Inject data into the DOM (handles repeats, bindings, etc.)
+    await injectCvData(page, cvData);
+
+    // Set viewport to A4 size with high DPI
     await page.setViewport({
       width: Math.round(210 * 3.779528),
       height: Math.round(297 * 3.779528),
-      deviceScaleFactor: 2, // 2x for better image quality
+      deviceScaleFactor: 2,
     });
 
-    // Add custom CSS to ensure the sidebar extends to the edge
-    await page.addStyleTag({
-      content: `
-        body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 210mm !important;
-          height: 297mm !important;
-          overflow: hidden !important;
-        }
-        .sidebar {
-          position: absolute !important;
-          right: 0 !important;
-          top: 0 !important;
-          bottom: 0 !important;
-          width: 30% !important;
-          height: 100% !important;
-          margin: 0 !important;
-          padding: 6mm 4mm !important;
-          box-sizing: border-box !important;
-        }
-        body::before {
-          right: 0 !important;
-          width: 30% !important;
-          height: 100% !important;
-        }
-        .main-content {
-          margin-right: 30% !important;
-        }
-      `
-    });
+    await page.emulateMediaType('print');
 
-    // Create the output directory if it doesn't exist
+    // Create output directory
     const outputDir = path.join(__dirname, 'output');
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir);
     }
 
-    // Generate the PDF file with high quality settings
-    const outputPath = path.join(outputDir, `${fileName}.pdf`);
+    // Generate PDF
+    const outputPath = path.join(outputDir, `${outputName}.pdf`);
     await page.pdf({
       path: outputPath,
       format: 'A4',
       printBackground: true,
-      margin: {
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0'
-      },
+      margin: { top: '0', right: '0', bottom: '0', left: '0' },
       preferCSSPageSize: false,
       scale: 1.0,
       omitBackground: false,
       displayHeaderFooter: false,
-      pageRanges: '1' // Only print the first page
+      pageRanges: '1'
     });
 
-    console.log(`PDF generated successfully for ${fileName} at: ${outputPath}`);
+    console.log(`PDF generated successfully: ${outputPath}`);
     console.log(`PDF size: ${(fs.statSync(outputPath).size / 1024).toFixed(2)} KB`);
-    
-    // Close the page
+
     await page.close();
-    
   } catch (error) {
-    console.error(`Error processing ${htmlFilePath}:`, error);
+    console.error(`Error processing ${jsonFilePath}:`, error);
   }
-}
-
-// Helper function to determine content type based on file extension
-function getContentType(filePath) {
-  const ext = path.extname(filePath).toLowerCase();
-  switch (ext) {
-    case '.jpg':
-    case '.jpeg':
-      return 'image/jpeg';
-    case '.png':
-      return 'image/png';
-    case '.gif':
-      return 'image/gif';
-    case '.svg':
-      return 'image/svg+xml';
-    default:
-      return 'application/octet-stream';
-  }
-}
-
-// Helper function to escape special characters in a string for use in a RegExp
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
 async function generatePDFs(specificFile = null) {
-  // Launch a headless browser with specific args to reduce PDF size
   const browser = await puppeteer.launch({
     args: [
       '--disable-gpu',
@@ -163,52 +88,53 @@ async function generatePDFs(specificFile = null) {
   });
   
   try {
-    // Get the doc directory path
     const docDir = path.join(__dirname, 'doc');
+    const dataDir = path.join(docDir, 'data');
     
-    // Check if the doc directory exists
     if (!fs.existsSync(docDir)) {
       console.error(`Doc directory not found at: ${docDir}`);
       return;
     }
+
+     if (!fs.existsSync(dataDir)) {
+       console.error(`Data directory not found at: ${dataDir}`);
+       return;
+     }
     
-    let htmlFiles;
-    
-    // If a specific file is provided, only process that file
     if (specificFile) {
-      const targetFile = specificFile.endsWith('.html') ? specificFile : `${specificFile}.html`;
-      if (!fs.existsSync(path.join(docDir, targetFile))) {
-        console.error(`File not found: ${targetFile}`);
+      const jsonPath = specificFile.endsWith('.json') 
+        ? path.join(dataDir, specificFile)
+        : path.join(dataDir, `${specificFile}.json`);
+      
+      if (fs.existsSync(jsonPath)) {
+        console.log(`Using JSON-driven generation: ${path.basename(jsonPath)}`);
+        await generatePDFFromJson(jsonPath, browser);
+        console.log('PDF generated successfully.');
         return;
       }
-      htmlFiles = [targetFile];
-      console.log(`Processing specific file: ${targetFile}`);
-    } else {
-      // Read all files in the doc directory
-      const files = fs.readdirSync(docDir);
-      
-      // Filter for HTML files
-      htmlFiles = files.filter(file => path.extname(file).toLowerCase() === '.html');
-      
-      if (htmlFiles.length === 0) {
-        console.log('No HTML files found in the doc directory.');
-        return;
-      }
-      
-      console.log(`Found ${htmlFiles.length} HTML files to process.`);
+
+      console.error(`JSON data file not found: ${jsonPath}`);
+      return;
     }
     
-    // Process each HTML file
-    for (const htmlFile of htmlFiles) {
-      const htmlFilePath = path.join(docDir, htmlFile);
-      await generatePDFForFile(htmlFilePath, browser);
-    }
+    // No specific file - process all JSON files in data directory
+    const jsonFiles = fs.readdirSync(dataDir)
+      .filter((f) => f.endsWith('.json') && f !== '_template.json');
     
+    if (jsonFiles.length === 0) {
+      console.log('No CV JSON files found to process (data/*.json).');
+      console.log('Note: _template.json is intentionally skipped.');
+      return;
+    }
+
+    console.log(`Found ${jsonFiles.length} JSON data files to process.`);
+    for (const jsonFile of jsonFiles) {
+      await generatePDFFromJson(path.join(dataDir, jsonFile), browser);
+    }
     console.log('All PDF files generated successfully.');
   } catch (error) {
     console.error('Error generating PDFs:', error);
   } finally {
-    // Close the browser
     await browser.close();
   }
 }

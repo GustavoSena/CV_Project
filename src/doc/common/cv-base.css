@@ -1,0 +1,356 @@
+/* CV Base Styles - Common CSS for all CV variants */
+
+/* === PAGE SETUP === */
+@page {
+    size: A4;
+    margin: 0;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    line-height: 1.2;
+    color: #333;
+    height: 297mm; /* Fixed A4 height */
+    width: 210mm; /* Fixed A4 width */
+    overflow: hidden;
+    box-sizing: border-box;
+    page-break-after: avoid;
+    position: relative;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+    background: #1A365C;
+    width: 30%;
+    padding: 6mm 0mm;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%; /* Full height */
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    z-index: 1; /* Ensure sidebar is on top */
+}
+
+/* Add a pseudo-element to extend the sidebar background */
+body::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30%;
+    background: #1A365C;
+    z-index: 0;
+    height: 100%;
+}
+
+/* Sidebar section spacing */
+.sidebar .section-title {
+    margin: 12px 0 8px 0;
+    color: white; 
+    border-color: white;
+}
+
+/* === MAIN CONTENT === */
+.main-content {
+    height: 100%;
+    overflow: hidden;
+    width: 70%;
+    padding: 30px;
+    font-size: 0.99em;
+    margin-left: 0;
+    margin-right: 30%;
+}
+
+/* === TYPOGRAPHY === */
+h1 {
+    font-size: 25px;
+    margin: 0 0 2px 0;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #1A365C;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 14px;
+    color: #1A365C;
+    border-bottom: 2px solid #1A365C;
+    padding-bottom: 3px;
+    margin: 15px 0 10px 0;
+    font-weight: bold;
+}
+
+/* === EXPERIENCE TABLES === */
+table.experience {
+    width: 100%;
+    margin-bottom: 5px;
+    border-spacing: 0;
+    font-size: 12px;
+}
+
+table.experience td {
+    vertical-align: top;
+    padding: 1px 0;
+}
+
+/* Add separator style for experience items */
+table.experience.with-separator {
+    border-bottom: 1px solid #D6EAF8;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
+}
+
+.company {
+    font-weight: bold;
+    color: #153090;
+    font-size: 12px;
+}
+
+.location {
+    float: right;
+    font-style: italic;
+    color: #666;
+    font-size: 12px;
+}
+
+/* Reduce the size of titles in main content sections */
+.main-content table.experience strong {
+    font-size: 13.5px;
+    display: inline-block;
+    margin-bottom: 2px;
+    color: #1A365C;
+}
+
+/* === LISTS === */
+ul {
+    margin: 5px 0 12px 0;
+    padding-left: 18px;
+}
+
+ul li {
+    margin: 2px 0;
+    line-height: 1.3;
+}
+
+/* Add a general bullet styling class that can be applied to all sections */
+ul.styled-bullets {
+    margin: 3px 25px 10px 0;
+    padding-left: 0px;
+    list-style: none;
+}
+
+ul.styled-bullets li {
+    position: relative;
+    margin: 3px 0;
+    line-height: 1.3;
+    padding-left: 14px;
+    color: #555;
+}
+
+/* Bullet styling for all items */
+ul.styled-bullets li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #888;
+    padding-left: 1px;
+    font-size: 9pt;
+}
+
+/* No bullet on first item variant */
+ul.styled-bullets.no-first-bullet li:first-child::before {
+    content: "";
+}
+
+/* Experience description (no bullet, same styling as list) */
+.experience-description {
+    color: #555;
+    font-size: 12px;
+    line-height: 1.3;
+    margin: 3px 25px 0 0;
+}
+
+.experience-description:empty {
+    display: none;
+}
+
+ul.experience-bullets {
+    margin: 3px 25px 10px 0;
+    padding-left: 8px;
+    list-style: none;
+}
+
+ul.experience-bullets li {
+    position: relative;
+    margin: 4px 0;
+    line-height: 1.3;
+    padding-left: 28px;
+    color: #555;
+}
+
+/* First item alignment fix */
+ul.experience-bullets li:first-child {
+    padding-left: 0px !important;
+    margin-left: 0;
+}
+
+/* Bullet styling for non-first items */
+ul.experience-bullets li:not(:first-child)::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #888;
+    padding-left: 1px;
+    font-size: 9pt;
+}
+
+/* === CONTACT INFO === */
+.contact-info {
+    margin-bottom: 12px;
+    font-size: 12px;
+}
+
+.contact-info div {
+    margin: 7px 0 0 0;
+}
+
+/* === SKILLS === */
+.skills {
+    columns: 2;
+    margin: 8px 0 12px 0;
+    font-size: 12px;
+}
+
+.skill-item {
+    break-inside: avoid;
+    margin: 3px 0;
+    display: inline-block;
+    width: 100%;
+}
+
+.skill-item:after {
+    content: "·";
+    margin: 0 3px;
+    color: white;
+}
+
+.skill-item:last-child:after {
+    content: "";
+}
+
+/* Sidebar skills list - single column variant */
+.skills-single {
+    margin: 8px 0 12px 0;
+    font-size: 12px;
+}
+
+.skills-single .skill-item {
+    display: block;
+    margin: 0px 0;
+}
+
+.skills-single .skill-item:after {
+    content: "";
+}
+
+/* === PHOTO === */
+.photo {
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* === LANGUAGES TABLE === */
+.language-table {
+    width: 100%;
+    font-size: 12px;
+}
+
+.language-table td {
+    padding: 3px 0;
+}
+
+.stars {
+    color: #FFD700;
+    letter-spacing: 2px;
+    font-size: 13px;
+}
+
+.circle-container {
+    display: flex;
+    gap: 2px;
+}
+
+.circle {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.filled {
+    background: #FFD700;
+}
+
+.empty {
+    background: #4A6579;
+}
+
+/* === PRINT / PDF GENERATION OVERRIDES === */
+@media print {
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        overflow: hidden !important;
+    }
+    
+    .sidebar {
+        position: absolute !important;
+        right: 0 !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        width: 30% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 6mm 4mm !important;
+        box-sizing: border-box !important;
+    }
+    
+    body::before {
+        right: 0 !important;
+        width: 30% !important;
+        height: 100% !important;
+    }
+    
+    .main-content {
+        margin-right: 30% !important;
+    }
+}

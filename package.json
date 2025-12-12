@@ -7,13 +7,10 @@
     "start": "node src/index.js",
     "pdf": "node src/index.js",
     "pdf:crypto": "node src/index.js CV_Gustavo_Sena_Crypto",
-    "pdf:general": "node src/index.js CV_Gustavo_Sena",
-    "render": "node src/renderAnswers.js",
-    "render:md": "node src/renderAnswers.js -f md",
-    "render:text": "node src/renderAnswers.js -f text"
+    "pdf:general": "node src/index.js CV_Gustavo_Sena"
   },
   "dependencies": {
-    "puppeteer": "^22.8.2",
-    "sharp": "^0.34.1"
+    "puppeteer": "^22.15.0",
+    "sharp": "^0.34.5"
   }
 }
