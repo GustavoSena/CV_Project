@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gustavo Sena - {{POSITION_TITLE}}</title>
+    <link rel="stylesheet" href="cv-base.css">
+    <style>
+        /* Add any CV-specific overrides here */
+    </style>
+</head>
+
+<body>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>GUSTAVO SENA</h1>
+        <div class="subtitle">{{POSITION_TITLE}}</div>
+
+        <!-- EXPERIENCE - Customize per CV -->
+        <div class="section-title">EXPERIENCE</div>
+        
+        <!-- Add experience entries here -->
+        <!-- Example structure:
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%"><strong>Job Title</strong><br>
+                    <span class="company">Company Name</span>
+                </td>
+                <td style="text-align: right" class="location">Location<br>Date Range</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>Main responsibility description:</li>
+                        <li>Achievement or task</li>
+                        <li>Tech stack used</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        -->
+
+        <!-- EDUCATION - Common Section -->
+        <div class="section-title">EDUCATION</div>
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%"><strong>MSc in Informatics and Computing Engineering</strong><br>
+                    <span class="company">Faculty of Engineering of University of Porto</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>09/2021 - 07/2025</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ul class="styled-bullets">
+                        <li>GPA: 15.2/20</li>
+                        <!-- Add thesis or other details as needed -->
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <table class="experience">
+            <tr>
+                <td style="width: 70%"><strong>BSc in Informatics and Computing Engineering</strong><br>
+                    <span class="company">Faculty of Engineering of University of Porto</span>
+                </td>
+                <td style="text-align: right" class="location">Porto, PT<br>09/2018 - 06/2021</td>
+            </tr>
+        </table>
+
+        <!-- Add other custom sections here (Volunteering, Projects, etc.) -->
+
+    </div>
+
+    <!-- Right Blue Sidebar -->
+    <div class="sidebar">
+        <!-- PHOTO - Common -->
+        <div class="photo">
+            <img src="../gustavo-photo.jpg" alt="Gustavo Sena Portrait"
+                style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+
+        <!-- CONTACT INFO - Common -->
+        <div class="section-title">CONTACT INFO</div>
+        <div class="contact-info">
+            <div>+351916202254</div>
+            <div>gustavosena.work@gmail.com</div>
+            <div>Porto, PT</div>
+        </div>
+
+        <!-- SUMMARY - Customize per CV -->
+        <div class="section-title">SUMMARY</div>
+        <table class="experience">
+            <tr>
+                <td colspan="2">
+                    <ul style="list-style: none; padding-left: 0; font-size: 10px;">
+                        {{SUMMARY_TEXT}}
+                    </ul>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Add custom sidebar sections here (Skills, Networks, etc.) -->
+
+        <!-- LANGUAGES - Common -->
+        <div class="section-title">LANGUAGES</div>
+        <table class="language-table">
+            <tr>
+                <td>Portuguese</td>
+                <td>
+                    <span class="circle-container">
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>English</td>
+                <td>
+                    <span class="circle-container">
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle empty"></span>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>Spanish</td>
+                <td>
+                    <span class="circle-container">
+                        <span class="circle filled"></span>
+                        <span class="circle filled"></span>
+                        <span class="circle empty"></span>
+                        <span class="circle empty"></span>
+                        <span class="circle empty"></span>
+                    </span>
+                </td>
+            </tr>
+        </table>
+
+        <!-- FIND ME ONLINE - Common -->
+        <div class="section-title">FIND ME ONLINE</div>
+        <div class="contact-info" style="margin-bottom: 12px">
+            <div>
+                <strong>LinkedIn</strong><br>
+                <a href="https://linkedin.com/in/gustavosenamendes" target="_blank"
+                    style="color: white; text-decoration: underline;">
+                    linkedin.com/in/gustavosenamendes
+                </a>
+            </div>
+            <div style="margin-top: 8px">
+                <strong>GitHub</strong><br>
+                <a href="https://github.com/GustavoSena" target="_blank"
+                    style="color: white; text-decoration: underline;">
+                    github.com/GustavoSena
+                </a>
+            </div>
+        </div>
+
+        <!-- Add custom sections here (Interests, etc.) -->
+    </div>
+
+</body>
+
+</html>

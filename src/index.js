@@ -13,6 +13,23 @@ async function generatePDFForFile(htmlFilePath, browser) {
     // Read the HTML content
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
     
+    // Process external CSS links - inline them since setContent doesn't load external resources
+    const cssLinkRegex = /<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["'][^>]*>/g;
+    let cssMatch;
+    while ((cssMatch = cssLinkRegex.exec(htmlContent)) !== null) {
+      const cssHref = cssMatch[1];
+      const cssPath = path.join(htmlDir, cssHref);
+      
+      if (fs.existsSync(cssPath)) {
+        const cssContent = fs.readFileSync(cssPath, 'utf8');
+        // Replace the link tag with inline style
+        htmlContent = htmlContent.replace(cssMatch[0], `<style>\n${cssContent}\n</style>`);
+        console.log(`Inlined CSS: ${cssHref}`);
+      } else {
+        console.warn(`CSS file not found: ${cssPath}`);
+      }
+    }
+    
     // Process image references directly
     const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/g;
     let match;
@@ -60,37 +77,8 @@ async function generatePDFForFile(htmlFilePath, browser) {
       deviceScaleFactor: 2, // 2x for better image quality
     });
 
-    // Add custom CSS to ensure the sidebar extends to the edge
-    await page.addStyleTag({
-      content: `
-        body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 210mm !important;
-          height: 297mm !important;
-          overflow: hidden !important;
-        }
-        .sidebar {
-          position: absolute !important;
-          right: 0 !important;
-          top: 0 !important;
-          bottom: 0 !important;
-          width: 30% !important;
-          height: 100% !important;
-          margin: 0 !important;
-          padding: 6mm 4mm !important;
-          box-sizing: border-box !important;
-        }
-        body::before {
-          right: 0 !important;
-          width: 30% !important;
-          height: 100% !important;
-        }
-        .main-content {
-          margin-right: 30% !important;
-        }
-      `
-    });
+    // Enable print media type to trigger @media print styles from cv-base.css
+    await page.emulateMediaType('print');
 
     // Create the output directory if it doesn't exist
     const outputDir = path.join(__dirname, 'output');

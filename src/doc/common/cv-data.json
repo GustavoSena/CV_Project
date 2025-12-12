@@ -1,0 +1,60 @@
+{
+  "personal": {
+    "name": "GUSTAVO SENA",
+    "photo": "gustavo-photo.jpg"
+  },
+  "contact": {
+    "phone": "+351916202254",
+    "email": "gustavosena.work@gmail.com",
+    "location": "Porto, PT"
+  },
+  "languages": [
+    {
+      "name": "Portuguese",
+      "level": 5,
+      "maxLevel": 5
+    },
+    {
+      "name": "English",
+      "level": 4,
+      "maxLevel": 5
+    },
+    {
+      "name": "Spanish",
+      "level": 2,
+      "maxLevel": 5
+    }
+  ],
+  "findMeOnline": [
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com/in/gustavosenamendes",
+      "displayText": "linkedin.com/in/gustavosenamendes"
+    },
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/GustavoSena",
+      "displayText": "github.com/GustavoSena"
+    }
+  ],
+  "education": [
+    {
+      "degree": "MSc in Informatics and Computing Engineering",
+      "institution": "Faculty of Engineering of University of Porto",
+      "location": "Porto, PT",
+      "startDate": "09/2021",
+      "endDate": "07/2025",
+      "details": [
+        "GPA: 15.2/20"
+      ]
+    },
+    {
+      "degree": "BSc in Informatics and Computing Engineering",
+      "institution": "Faculty of Engineering of University of Porto",
+      "location": "Porto, PT",
+      "startDate": "09/2018",
+      "endDate": "06/2021",
+      "details": []
+    }
+  ]
+}
