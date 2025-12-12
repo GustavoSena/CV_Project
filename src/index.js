@@ -4,7 +4,6 @@ const fs = require('fs');
 
 const { inlineCssLinks } = require('./utils/inlineCssLinks');
 const { embedImagesAsDataUrls } = require('./utils/embedImagesAsDataUrls');
-const { loadJsonIfExists } = require('./utils/loadJsonIfExists');
 const { injectCvData } = require('./utils/injectCvData');
 const { buildCvFromJson } = require('./utils/buildCvFromJson');
 
@@ -78,84 +77,6 @@ async function generatePDFFromJson(jsonFilePath, browser) {
   }
 }
 
-/**
- * Legacy: Generate PDF from an HTML file (backwards compatibility)
- */
-async function generatePDFForFile(htmlFilePath, browser) {
-  const { expandHtmlIncludes } = require('./utils/expandHtmlIncludes');
-  const fileName = path.basename(htmlFilePath, '.html');
-  const htmlDir = path.dirname(htmlFilePath);
-  
-  try {
-    let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
-    htmlContent = expandHtmlIncludes(htmlContent, htmlDir, console);
-
-    const commonDataPath = path.join(htmlDir, 'common', 'cv-data.json');
-    const cvData = loadJsonIfExists(commonDataPath, console);
-
-    htmlContent = inlineCssLinks(htmlContent, htmlDir, console);
-    htmlContent = embedImagesAsDataUrls(htmlContent, htmlDir, console);
-    
-    // Create a new page for PDF generation
-    const page = await browser.newPage();
-    
-    // Set content to the page with embedded images
-    await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0'
-    });
-
-    // Inject common data into the HTML without changing layout.
-    // Only modifies nodes explicitly marked with data-cv-* attributes.
-    if (cvData) {
-      await injectCvData(page, cvData);
-    }
-
-    // Set viewport to A4 size (A4 is 210mm × 297mm) with high DPI for quality
-    await page.setViewport({
-      width: Math.round(210 * 3.779528),
-      height: Math.round(297 * 3.779528),
-      deviceScaleFactor: 2, // 2x for better image quality
-    });
-
-    // Enable print media type to trigger @media print styles from cv-base.css
-    await page.emulateMediaType('print');
-
-    // Create the output directory if it doesn't exist
-    const outputDir = path.join(__dirname, 'output');
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir);
-    }
-
-    // Generate the PDF file with high quality settings
-    const outputPath = path.join(outputDir, `${fileName}.pdf`);
-    await page.pdf({
-      path: outputPath,
-      format: 'A4',
-      printBackground: true,
-      margin: {
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0'
-      },
-      preferCSSPageSize: false,
-      scale: 1.0,
-      omitBackground: false,
-      displayHeaderFooter: false,
-      pageRanges: '1' // Only print the first page
-    });
-
-    console.log(`PDF generated successfully for ${fileName} at: ${outputPath}`);
-    console.log(`PDF size: ${(fs.statSync(outputPath).size / 1024).toFixed(2)} KB`);
-    
-    // Close the page
-    await page.close();
-    
-  } catch (error) {
-    console.error(`Error processing ${htmlFilePath}:`, error);
-  }
-}
-
 async function generatePDFs(specificFile = null) {
   const browser = await puppeteer.launch({
     args: [
@@ -174,10 +95,13 @@ async function generatePDFs(specificFile = null) {
       console.error(`Doc directory not found at: ${docDir}`);
       return;
     }
+
+     if (!fs.existsSync(dataDir)) {
+       console.error(`Data directory not found at: ${dataDir}`);
+       return;
+     }
     
-    // Check if argument is a JSON file (new approach) or HTML file (legacy)
     if (specificFile) {
-      // Try JSON first (new approach)
       const jsonPath = specificFile.endsWith('.json') 
         ? path.join(dataDir, specificFile)
         : path.join(dataDir, `${specificFile}.json`);
@@ -188,46 +112,24 @@ async function generatePDFs(specificFile = null) {
         console.log('PDF generated successfully.');
         return;
       }
-      
-      // Fallback to HTML (legacy)
-      const htmlPath = specificFile.endsWith('.html')
-        ? path.join(docDir, specificFile)
-        : path.join(docDir, `${specificFile}.html`);
-      
-      if (fs.existsSync(htmlPath)) {
-        console.log(`Using legacy HTML generation: ${path.basename(htmlPath)}`);
-        await generatePDFForFile(htmlPath, browser);
-        console.log('PDF generated successfully.');
-        return;
-      }
-      
-      console.error(`File not found: ${specificFile} (tried both JSON and HTML)`);
+
+      console.error(`JSON data file not found: ${jsonPath}`);
       return;
     }
     
     // No specific file - process all JSON files in data directory
-    if (fs.existsSync(dataDir)) {
-      const jsonFiles = fs.readdirSync(dataDir).filter(f => f.endsWith('.json'));
-      if (jsonFiles.length > 0) {
-        console.log(`Found ${jsonFiles.length} JSON data files to process.`);
-        for (const jsonFile of jsonFiles) {
-          await generatePDFFromJson(path.join(dataDir, jsonFile), browser);
-        }
-        console.log('All PDF files generated successfully.');
-        return;
-      }
-    }
+    const jsonFiles = fs.readdirSync(dataDir)
+      .filter((f) => f.endsWith('.json') && f !== '_template.json');
     
-    // Fallback: process HTML files (legacy)
-    const htmlFiles = fs.readdirSync(docDir).filter(f => f.endsWith('.html'));
-    if (htmlFiles.length === 0) {
-      console.log('No JSON or HTML files found to process.');
+    if (jsonFiles.length === 0) {
+      console.log('No CV JSON files found to process (data/*.json).');
+      console.log('Note: _template.json is intentionally skipped.');
       return;
     }
-    
-    console.log(`Found ${htmlFiles.length} HTML files to process (legacy mode).`);
-    for (const htmlFile of htmlFiles) {
-      await generatePDFForFile(path.join(docDir, htmlFile), browser);
+
+    console.log(`Found ${jsonFiles.length} JSON data files to process.`);
+    for (const jsonFile of jsonFiles) {
+      await generatePDFFromJson(path.join(dataDir, jsonFile), browser);
     }
     console.log('All PDF files generated successfully.');
   } catch (error) {

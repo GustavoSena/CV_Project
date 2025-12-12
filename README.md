@@ -8,7 +8,7 @@ A modular, JSON-driven CV/resume generator that produces professional A4-sized P
 - **Modular components**: Reusable HTML components for experience, education, skills, etc.
 - **A4 PDF output**: Optimized for single-page professional CVs
 - **Embedded images**: Photos and assets are embedded as data URLs
-- **Customizable layout**: 65% main content / 35% sidebar split
+- **Customizable layout**: 70% main content / 30% sidebar split
 
 ## Requirements
 
@@ -29,8 +29,8 @@ A modular, JSON-driven CV/resume generator that produces professional A4-sized P
 
 3. Generate a specific CV:
    ```bash
-   npm run pdf:crypto    # Generates CV_Gustavo_Sena_Crypto.pdf
-   npm run pdf:general   # Generates CV_Gustavo_Sena.pdf
+   npm run pdf:crypto    
+   npm run pdf:general   
    ```
 
 ## Creating a New CV
@@ -50,7 +50,7 @@ A modular, JSON-driven CV/resume generator that produces professional A4-sized P
    - `mainSections` - Left side content (experience, education, etc.)
    - `sidebarSections` - Right sidebar content (summary, skills, etc.)
 
-3. **Add your photo** to `src/doc/` directory
+3. **Add your photo** to `src/doc/photos/` directory
 
 4. **Generate your CV**:
    ```bash
@@ -64,9 +64,8 @@ src/
 ├── index.js                 # Main PDF generation script
 ├── doc/
 │   ├── data/                # CV JSON data files
-│   │   ├── _template.json   # Template for new CVs
-│   │   ├── CV_Gustavo_Sena.json
-│   │   └── CV_Gustavo_Sena_Crypto.json
+│   │   └── _template.json   # Template for new CVs
+│   ├── photos/              # Photos (gitignored, folder tracked via .gitkeep)
 │   ├── templates/
 │   │   └── cv-layout.html   # Main layout skeleton
 │   ├── components/          # Reusable HTML components
@@ -87,6 +86,11 @@ src/
 ```
 
 ## JSON Data Structure
+
+## Git ignore rules (important)
+
+- **CV data**: everything in `src/doc/data/*.json` is ignored **except** `src/doc/data/_template.json`
+- **Photos**: everything in `src/doc/photos/*` is ignored **except** `src/doc/photos/.gitkeep`
 
 ### Experience Items
 ```json
@@ -129,4 +133,4 @@ Use `$` prefix to reference root-level data:
 
 ## Legacy HTML Mode
 
-The generator also supports legacy HTML files in `src/doc/*.html` for backwards compatibility. JSON files take priority when both exist.
+Legacy HTML mode has been removed. This project is now JSON-driven only.
