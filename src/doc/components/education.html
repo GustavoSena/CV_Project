@@ -1,0 +1,27 @@
+<!-- Education Section Component -->
+<div class="section-title">EDUCATION</div>
+<div data-cv-repeat="items">
+    <template>
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%">
+                    <strong data-cv-text="degree">Degree</strong><br>
+                    <span class="company" data-cv-text="institution">Institution</span>
+                </td>
+                <td style="text-align: right" class="location">
+                    <span data-cv-text="location">Location</span><br>
+                    <span data-cv-date-range=".">Date Range</span>
+                </td>
+            </tr>
+            <tr data-cv-if="details.length">
+                <td colspan="2">
+                    <ul class="styled-bullets" data-cv-repeat="details">
+                        <template>
+                            <li data-cv-text="."></li>
+                        </template>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </template>
+</div>

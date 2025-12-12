@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "title": "Gustavo Sena",
+    "outputName": "CV_Gustavo_Sena"
+  },
+  "personal": {
+    "name": "GUSTAVO SENA",
+    "subtitle": "Blockchain Developer",
+    "photo": "gustavo-photo.jpg"
+  },
+  "contact": {
+    "phone": "+351916202254",
+    "email": "gustavosena.work@gmail.com",
+    "location": "Porto, PT"
+  },
+  "languages": [
+    { "name": "Portuguese", "level": 5, "maxLevel": 5 },
+    { "name": "English", "level": 4, "maxLevel": 5 },
+    { "name": "Spanish", "level": 2, "maxLevel": 5 }
+  ],
+  "findMeOnline": [
+    { "platform": "LinkedIn", "url": "https://linkedin.com/in/gustavosenamendes", "displayText": "linkedin.com/in/gustavosenamendes" },
+    { "platform": "GitHub", "url": "https://github.com/GustavoSena", "displayText": "github.com/GustavoSena" }
+  ],
+  "education": [
+    {
+      "degree": "MSc in Informatics and Computing Engineering",
+      "institution": "Faculty of Engineering of University of Porto",
+      "location": "Porto, PT",
+      "startDate": "09/2021",
+      "endDate": "07/2025",
+      "details": ["GPA: 15.2/20", "Thesis: Gas Optimization in Solidity Smart Contracts (unpublished)"]
+    },
+    {
+      "degree": "BSc in Informatics and Computing Engineering",
+      "institution": "Faculty of Engineering of University of Porto",
+      "location": "Porto, PT",
+      "startDate": "09/2018",
+      "endDate": "06/2021",
+      "details": []
+    }
+  ],
+  "volunteering": [
+    { "title": "Beach and Forest Cleaning", "organization": "Foca", "date": "2019" },
+    { "title": "Tree planting - Slope reinforcement", "organization": "Foca", "date": "2019" }
+  ],
+  "mainSections": [
+    {
+      "component": "experience",
+      "title": "EXPERIENCE",
+      "items": [
+        {
+          "role": "Senior Blockchain Engineer",
+          "company": "OnlyHighIQ",
+          "location": "Porto, PT",
+          "dateRange": "07/2025 - Present",
+          "description": "Led the design and implementation of a blockchain-based payments solution for a content-sharing platform:",
+          "bullets": [
+            "Built smart contracts and added security checks, tests, and gas optimizations",
+            "Reworked the end-to-end payment flow, including database changes",
+            "Evaluated, contacted, and negotiated with required service providers",
+            "Stack: TypeScript, Solidity, React, NestJS, Git, Docker, AWS"
+          ]
+        },
+        {
+          "role": "Blockchain Developer",
+          "company": "GBL Tech",
+          "location": "Porto, PT",
+          "dateRange": "12/2023 - 07/2025",
+          "description": "Contributed to a Celfocus project focused on microservices and integration with public and private blockchains:",
+          "bullets": [
+            "Built smart contracts for IoT use cases",
+            "Tested and optimized smart contract code",
+            "Implemented microservices integrating blockchain components with existing systems",
+            "Researched and designed a private, permissioned DLT architecture",
+            "Stack: Solidity, Java, Spring Boot, Kotlin, TypeScript, Go (Golang), Docker, Git"
+          ]
+        },
+        {
+          "role": "Blockchain Developer",
+          "company": "Exaud",
+          "location": "Porto, PT",
+          "dateRange": "08/2022 - 12/2023",
+          "description": "Helped build a lending/borrowing platform for liquidity-management strategies across multiple blockchains and protocols:",
+          "bullets": [
+            "Built smart contracts for liquidity management on Ethereum",
+            "Owned smart-contract security reviews and gas optimizations",
+            "Integrated frontend and backend services with on-chain components",
+            "Wrote and maintained smart-contract test suites",
+            "Built analytics scripts to evaluate yield opportunities across diverse liquidity pools",
+            "Stack: Solidity, TypeScript, Hardhat, NestJS, Express.js, React, Git"
+          ]
+        },
+        {
+          "role": "Recreational and Cultural Department Member",
+          "company": "Students Association of FEUP",
+          "location": "Porto, PT",
+          "dateRange": "06/2019 - 06/2023",
+          "bullets": [
+            "Worked to improve the students' experience at FEUP",
+            "Participated in the organization and planning of numerous events"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "education",
+      "items": "$education"
+    },
+    {
+      "component": "volunteering",
+      "items": "$volunteering"
+    }
+  ],
+  "sidebarSections": [
+    {
+      "component": "sidebar/contact",
+      "phone": "$contact.phone",
+      "email": "$contact.email",
+      "location": "$contact.location"
+    },
+    {
+      "component": "sidebar/summary",
+      "text": "Senior Blockchain Engineer at OnlyHighIQ. Fast learner with a growth mindset, strong problem-solving skills, and a bias toward action."
+    },
+    {
+      "component": "sidebar/languages",
+      "items": "$languages"
+    },
+    {
+      "component": "sidebar/skills",
+      "title": "TECHNICAL SKILLS",
+      "styleClass": "skills",
+      "items": [
+        "Blockchain", "Smart Contracts", "React", "JavaScript", "Git", "Java", "LaTeX", "Python",
+        "Solidity", "TypeScript", "Docker", "AWS", "SQL", "Microservices", "Golang", "Scrum"
+      ]
+    },
+    {
+      "component": "sidebar/skills",
+      "title": "SOFT SKILLS",
+      "styleClass": "skills",
+      "items": ["Teamwork", "Problem-solving", "Leadership", "Adaptability", "Communication", "Organization"]
+    },
+    {
+      "component": "sidebar/online",
+      "items": "$findMeOnline"
+    },
+    {
+      "component": "sidebar/interests",
+      "items": ["Crypto research", "Formula 1", "Board games", "Travel", "Basketball"]
+    }
+  ]
+}

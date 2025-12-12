@@ -1,6 +1,7 @@
 {
   "personal": {
     "name": "GUSTAVO SENA",
+    "currentTitle": "Senior Blockchain Engineer",
     "photo": "gustavo-photo.jpg"
   },
   "contact": {
@@ -45,7 +46,8 @@
       "startDate": "09/2021",
       "endDate": "07/2025",
       "details": [
-        "GPA: 15.2/20"
+        "GPA: 15.2/20",
+        "Thesis: Gas Optimization in Solidity Smart Contracts (unpublished)"
       ]
     },
     {

@@ -1,0 +1,122 @@
+{
+  "meta": {
+    "title": "Your Name - Job Title",
+    "outputName": "CV_Your_Name"
+  },
+  "personal": {
+    "name": "YOUR NAME",
+    "subtitle": "Your Job Title",
+    "photo": "your-photo.jpg"
+  },
+  "contact": {
+    "phone": "+1234567890",
+    "email": "your.email@example.com",
+    "location": "City, Country"
+  },
+  "languages": [
+    { "name": "English", "level": 5, "maxLevel": 5 },
+    { "name": "Spanish", "level": 3, "maxLevel": 5 }
+  ],
+  "findMeOnline": [
+    { "platform": "LinkedIn", "url": "https://linkedin.com/in/yourprofile", "displayText": "linkedin.com/in/yourprofile" },
+    { "platform": "GitHub", "url": "https://github.com/yourprofile", "displayText": "github.com/yourprofile" }
+  ],
+  "education": [
+    {
+      "degree": "MSc in Your Field",
+      "institution": "University Name",
+      "location": "City, Country",
+      "startDate": "09/2020",
+      "endDate": "06/2022",
+      "details": ["GPA: X.X/4.0", "Thesis: Your Thesis Title"]
+    },
+    {
+      "degree": "BSc in Your Field",
+      "institution": "University Name",
+      "location": "City, Country",
+      "startDate": "09/2016",
+      "endDate": "06/2020",
+      "details": []
+    }
+  ],
+  "volunteering": [
+    { "title": "Volunteer Role", "organization": "Organization Name", "date": "2020" }
+  ],
+  "mainSections": [
+    {
+      "component": "experience",
+      "title": "EXPERIENCE",
+      "items": [
+        {
+          "role": "Job Title",
+          "company": "Company Name",
+          "location": "City, Country",
+          "dateRange": "01/2023 - Present",
+          "description": "Brief description of your role and main responsibilities:",
+          "bullets": [
+            "Achievement or responsibility 1",
+            "Achievement or responsibility 2",
+            "Stack: Tech1, Tech2, Tech3"
+          ]
+        },
+        {
+          "role": "Previous Job Title",
+          "company": "Previous Company",
+          "client": "Optional Client Name",
+          "clientDisplay": "(Client: Optional Client Name)",
+          "location": "City, Country",
+          "dateRange": "01/2021 - 12/2022",
+          "description": "Brief description of your role:",
+          "bullets": [
+            "Achievement or responsibility 1",
+            "Achievement or responsibility 2"
+          ]
+        }
+      ]
+    },
+    {
+      "component": "education",
+      "items": "$education"
+    },
+    {
+      "component": "volunteering",
+      "items": "$volunteering"
+    }
+  ],
+  "sidebarSections": [
+    {
+      "component": "sidebar/contact",
+      "phone": "$contact.phone",
+      "email": "$contact.email",
+      "location": "$contact.location"
+    },
+    {
+      "component": "sidebar/summary",
+      "text": "Brief professional summary. Highlight your key strengths and experience in 2-3 sentences."
+    },
+    {
+      "component": "sidebar/languages",
+      "items": "$languages"
+    },
+    {
+      "component": "sidebar/skills",
+      "title": "TECHNICAL SKILLS",
+      "styleClass": "skills",
+      "items": ["Skill1", "Skill2", "Skill3", "Skill4", "Skill5", "Skill6"]
+    },
+    {
+      "component": "sidebar/skills",
+      "title": "SOFT SKILLS",
+      "styleClass": "skills",
+      "items": ["Teamwork", "Communication", "Leadership", "Problem-solving"]
+    },
+    {
+      "component": "sidebar/online",
+      "items": "$findMeOnline"
+    },
+    {
+      "component": "sidebar/interests",
+      "items": ["Interest1", "Interest2", "Interest3"]
+    }
+  ]
+}

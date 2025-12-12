@@ -1,0 +1,29 @@
+<!-- Experience Section Component -->
+<div class="section-title" data-cv-text="title">EXPERIENCE</div>
+<div data-cv-repeat="items">
+    <template>
+        <table class="experience with-separator">
+            <tr>
+                <td style="width: 70%">
+                    <strong data-cv-text="role">Role Title</strong><br>
+                    <span class="company" data-cv-text="company">Company</span>
+                    <span data-cv-if="client" style="color: #666; font-size: 11px;" data-cv-text="clientDisplay"></span>
+                </td>
+                <td style="text-align: right" class="location">
+                    <span data-cv-text="location">Location</span><br>
+                    <span data-cv-text="dateRange">Date Range</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="experience-description" data-cv-text="description"></div>
+                    <ul class="styled-bullets no-first-bullet" data-cv-repeat="bullets">
+                        <template>
+                            <li data-cv-text="."></li>
+                        </template>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </template>
+</div>

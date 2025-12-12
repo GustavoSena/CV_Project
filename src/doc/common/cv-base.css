@@ -163,20 +163,31 @@ ul.styled-bullets li {
     color: #555;
 }
 
-/* First item alignment fix */
-ul.styled-bullets li:first-child {
-    padding-left: 0px !important;
-    margin-left: 0;
-}
-
-/* Bullet styling for non-first items */
-ul.styled-bullets li:not(:first-child)::before {
+/* Bullet styling for all items */
+ul.styled-bullets li::before {
     content: "•";
     position: absolute;
     left: 0;
     color: #888;
     padding-left: 1px;
     font-size: 9pt;
+}
+
+/* No bullet on first item variant */
+ul.styled-bullets.no-first-bullet li:first-child::before {
+    content: "";
+}
+
+/* Experience description (no bullet, same styling as list) */
+.experience-description {
+    color: #555;
+    font-size: 12px;
+    line-height: 1.3;
+    margin: 3px 25px 0 0;
+}
+
+.experience-description:empty {
+    display: none;
 }
 
 ul.experience-bullets {
@@ -212,18 +223,18 @@ ul.experience-bullets li:not(:first-child)::before {
 /* === CONTACT INFO === */
 .contact-info {
     margin-bottom: 12px;
-    font-size: 11.5px;
+    font-size: 12px;
 }
 
 .contact-info div {
-    margin: 5px 0;
+    margin: 7px 0 0 0;
 }
 
 /* === SKILLS === */
 .skills {
     columns: 2;
     margin: 8px 0 12px 0;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .skill-item {
@@ -235,7 +246,7 @@ ul.experience-bullets li:not(:first-child)::before {
 
 .skill-item:after {
     content: "·";
-    margin: 0 4px;
+    margin: 0 3px;
     color: white;
 }
 
@@ -246,12 +257,12 @@ ul.experience-bullets li:not(:first-child)::before {
 /* Sidebar skills list - single column variant */
 .skills-single {
     margin: 8px 0 12px 0;
-    font-size: 10.5px;
+    font-size: 12px;
 }
 
 .skills-single .skill-item {
     display: block;
-    margin: 2px 0;
+    margin: 0px 0;
 }
 
 .skills-single .skill-item:after {
@@ -263,7 +274,7 @@ ul.experience-bullets li:not(:first-child)::before {
     width: 115px;
     height: 115px;
     border-radius: 50%;
-    margin: 0 auto 20px;
+    margin: 0 auto 10px;
     overflow: hidden;
     background: #fff;
 }
@@ -278,7 +289,7 @@ ul.experience-bullets li:not(:first-child)::before {
 /* === LANGUAGES TABLE === */
 .language-table {
     width: 100%;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .language-table td {
