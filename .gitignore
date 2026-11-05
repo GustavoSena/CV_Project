@@ -5,12 +5,9 @@ node_modules/
 output/
 src/output/
 
-# CV JSON data (keep template only)
-src/doc/data/*.json
-!src/doc/data/_template.json
-
-# CV photos (keep folder tracked via .gitkeep)
-src/doc/photos/*
+# People's CV folders (data, photos, layout) — keep the example only
+people/*
+!people/example/
 
 # Local notes / references
 helpful_info/

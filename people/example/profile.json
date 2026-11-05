@@ -1,0 +1,63 @@
+{
+  "personal": {
+    "name": "YOUR NAME",
+    "photo": "photos/your-photo.jpg"
+  },
+  "contact": {
+    "phone": "+1234567890",
+    "email": "your.email@example.com",
+    "location": "City, Country"
+  },
+  "languages": [
+    {
+      "name": "English",
+      "level": 5,
+      "maxLevel": 5
+    },
+    {
+      "name": "Spanish",
+      "level": 3,
+      "maxLevel": 5
+    }
+  ],
+  "findMeOnline": [
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com/in/yourprofile",
+      "displayText": "linkedin.com/in/yourprofile"
+    },
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/yourprofile",
+      "displayText": "github.com/yourprofile"
+    }
+  ],
+  "education": [
+    {
+      "degree": "MSc in Your Field",
+      "institution": "University Name",
+      "location": "City, Country",
+      "startDate": "09/2020",
+      "endDate": "06/2022",
+      "details": [
+        "GPA: X.X/4.0",
+        "Thesis: Your Thesis Title"
+      ]
+    },
+    {
+      "degree": "BSc in Your Field",
+      "institution": "University Name",
+      "location": "City, Country",
+      "startDate": "09/2016",
+      "endDate": "06/2020",
+      "details": []
+    }
+  ],
+  "volunteering": [
+    {
+      "title": "Volunteer Role",
+      "organization": "Organization Name",
+      "date": "2020"
+    }
+  ]
+}

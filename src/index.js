@@ -6,21 +6,29 @@ const { inlineCssLinks } = require('./utils/inlineCssLinks');
 const { embedImagesAsDataUrls } = require('./utils/embedImagesAsDataUrls');
 const { injectCvData } = require('./utils/injectCvData');
 const { buildCvFromJson } = require('./utils/buildCvFromJson');
+const { loadCvData } = require('./utils/loadCvData');
+
+const ROOT_DIR = path.join(__dirname, '..');
+const PEOPLE_DIR = path.join(ROOT_DIR, 'people');
+const OUTPUT_DIR = path.join(ROOT_DIR, 'output');
+// Skipped when building everyone; build it explicitly with `node src/index.js example`.
+const EXAMPLE_PERSON = 'example';
 
 /**
- * Generate PDF from a JSON data file (new approach)
+ * Generate a PDF for one CV variant of a person.
+ * Everything except this engine (layout, components, CSS, photos, data) comes from personDir.
  */
-async function generatePDFFromJson(jsonFilePath, browser) {
-  const docDir = path.join(__dirname, 'doc');
-  const templatesDir = path.join(docDir, 'templates');
-  const componentsDir = path.join(docDir, 'components');
-  
+async function generatePDFFromJson(personDir, jsonFilePath, browser) {
+  const person = path.basename(personDir);
+  const templatesDir = path.join(personDir, 'templates');
+  const componentsDir = path.join(personDir, 'components');
+
   try {
-    // Load CV data from JSON
-    const cvData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
+    // Load CV data: profile.json merged with the variant
+    const cvData = loadCvData(personDir, jsonFilePath);
     const outputName = cvData.meta?.outputName || path.basename(jsonFilePath, '.json');
-    
-    console.log(`Building CV from JSON: ${path.basename(jsonFilePath)}`);
+
+    console.log(`Building CV: ${person}/${path.basename(jsonFilePath)}`);
 
     // Build HTML from layout template + components + data
     const layoutPath = path.join(templatesDir, 'cv-layout.html');
@@ -29,8 +37,8 @@ async function generatePDFFromJson(jsonFilePath, browser) {
     // Inline CSS (resolve relative to templates dir, then try doc dir)
     htmlContent = inlineCssLinks(htmlContent, templatesDir, console);
 
-    // Embed images (resolve relative to doc dir where photos are)
-    htmlContent = embedImagesAsDataUrls(htmlContent, docDir, console);
+    // Embed images (resolve relative to the person's folder, where photos/ lives)
+    htmlContent = embedImagesAsDataUrls(htmlContent, personDir, console);
 
     // Create page and set content
     const page = await browser.newPage();
@@ -48,11 +56,9 @@ async function generatePDFFromJson(jsonFilePath, browser) {
 
     await page.emulateMediaType('print');
 
-    // Create output directory
-    const outputDir = path.join(__dirname, 'output');
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir);
-    }
+    // Create output directory (one per person)
+    const outputDir = path.join(OUTPUT_DIR, person);
+    fs.mkdirSync(outputDir, { recursive: true });
 
     // Generate PDF
     const outputPath = path.join(outputDir, `${outputName}.pdf`);
@@ -74,10 +80,76 @@ async function generatePDFFromJson(jsonFilePath, browser) {
     await page.close();
   } catch (error) {
     console.error(`Error processing ${jsonFilePath}:`, error);
+    process.exitCode = 1;
   }
 }
 
-async function generatePDFs(specificFile = null) {
+// statSync follows symlinks, so a person folder can live outside the repo; broken links are skipped.
+function isDirectory(entryPath) {
+  try {
+    return fs.statSync(entryPath).isDirectory();
+  } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'ELOOP') {
+      console.warn(`Skipping broken link: ${entryPath}`);
+      return false;
+    }
+    throw error;
+  }
+}
+
+/**
+ * Lists the CV variants to build as { personDir, jsonPath }.
+ * No person: every person except the example. No variant: every file in the person's cvs/.
+ */
+function findCvVariants(person, variant) {
+  const people = person
+    ? [person]
+    : fs.readdirSync(PEOPLE_DIR)
+        .filter((name) => name !== EXAMPLE_PERSON && isDirectory(path.join(PEOPLE_DIR, name)));
+
+  const variants = [];
+  for (const name of people) {
+    const personDir = path.join(PEOPLE_DIR, name);
+    const cvsDir = path.join(personDir, 'cvs');
+    if (!fs.existsSync(cvsDir)) {
+      console.error(`No cvs/ folder for "${name}": ${cvsDir}`);
+      process.exitCode = 1;
+      continue;
+    }
+
+    const files = variant
+      ? [variant.endsWith('.json') ? variant : `${variant}.json`]
+      : fs.readdirSync(cvsDir).filter((f) => f.endsWith('.json'));
+
+    for (const file of files) {
+      const jsonPath = path.join(cvsDir, file);
+      if (!fs.existsSync(jsonPath)) {
+        console.error(`CV variant not found: ${jsonPath}`);
+        process.exitCode = 1;
+        continue;
+      }
+      variants.push({ personDir, jsonPath });
+    }
+  }
+  return variants;
+}
+
+async function generatePDFs(person = null, variant = null) {
+  if (!fs.existsSync(PEOPLE_DIR)) {
+    console.error(`People directory not found at: ${PEOPLE_DIR}`);
+    process.exitCode = 1;
+    return;
+  }
+
+  const variants = findCvVariants(person, variant);
+  if (variants.length === 0) {
+    console.log(`No CVs found to build in ${PEOPLE_DIR}.`);
+    if (!person) {
+      console.log(`Note: "${EXAMPLE_PERSON}" is skipped unless named: node src/index.js ${EXAMPLE_PERSON}`);
+    }
+    return;
+  }
+
   const browser = await puppeteer.launch({
     args: [
       '--disable-gpu',
@@ -86,64 +158,24 @@ async function generatePDFs(specificFile = null) {
       '--no-sandbox',
     ]
   });
-  
+
   try {
-    const docDir = path.join(__dirname, 'doc');
-    const dataDir = path.join(docDir, 'data');
-    
-    if (!fs.existsSync(docDir)) {
-      console.error(`Doc directory not found at: ${docDir}`);
-      return;
+    console.log(`Found ${variants.length} CV(s) to build.`);
+    for (const { personDir, jsonPath } of variants) {
+      await generatePDFFromJson(personDir, jsonPath, browser);
     }
-
-     if (!fs.existsSync(dataDir)) {
-       console.error(`Data directory not found at: ${dataDir}`);
-       return;
-     }
-    
-    if (specificFile) {
-      const jsonPath = specificFile.endsWith('.json') 
-        ? path.join(dataDir, specificFile)
-        : path.join(dataDir, `${specificFile}.json`);
-      
-      if (fs.existsSync(jsonPath)) {
-        console.log(`Using JSON-driven generation: ${path.basename(jsonPath)}`);
-        await generatePDFFromJson(jsonPath, browser);
-        console.log('PDF generated successfully.');
-        return;
-      }
-
-      console.error(`JSON data file not found: ${jsonPath}`);
-      return;
-    }
-    
-    // No specific file - process all JSON files in data directory
-    const jsonFiles = fs.readdirSync(dataDir)
-      .filter((f) => f.endsWith('.json') && f !== '_template.json');
-    
-    if (jsonFiles.length === 0) {
-      console.log('No CV JSON files found to process (data/*.json).');
-      console.log('Note: _template.json is intentionally skipped.');
-      return;
-    }
-
-    console.log(`Found ${jsonFiles.length} JSON data files to process.`);
-    for (const jsonFile of jsonFiles) {
-      await generatePDFFromJson(path.join(dataDir, jsonFile), browser);
-    }
-    console.log('All PDF files generated successfully.');
   } catch (error) {
     console.error('Error generating PDFs:', error);
+    process.exitCode = 1;
   } finally {
     await browser.close();
   }
 }
 
-// Parse CLI arguments - get specific file if provided
-const args = process.argv.slice(2);
-const specificFile = args.length > 0 ? args[0] : null;
+// Usage: node src/index.js [person] [variant]
+const [person = null, variant = null] = process.argv.slice(2);
 
-// Execute the function
-generatePDFs(specificFile).catch(error => {
+generatePDFs(person, variant).catch(error => {
   console.error('Error in main process:', error);
+  process.exitCode = 1;
 });
