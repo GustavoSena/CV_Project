@@ -80,6 +80,20 @@ async function generatePDFFromJson(personDir, jsonFilePath, browser) {
     await page.close();
   } catch (error) {
     console.error(`Error processing ${jsonFilePath}:`, error);
+    process.exitCode = 1;
+  }
+}
+
+// statSync follows symlinks, so a person folder can live outside the repo; broken links are skipped.
+function isDirectory(entryPath) {
+  try {
+    return fs.statSync(entryPath).isDirectory();
+  } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'ELOOP') {
+      console.warn(`Skipping broken link: ${entryPath}`);
+      return false;
+    }
+    throw error;
   }
 }
 
@@ -91,8 +105,7 @@ function findCvVariants(person, variant) {
   const people = person
     ? [person]
     : fs.readdirSync(PEOPLE_DIR)
-        // statSync follows symlinks, so a person folder can live outside the repo
-        .filter((name) => name !== EXAMPLE_PERSON && fs.statSync(path.join(PEOPLE_DIR, name)).isDirectory());
+        .filter((name) => name !== EXAMPLE_PERSON && isDirectory(path.join(PEOPLE_DIR, name)));
 
   const variants = [];
   for (const name of people) {
@@ -100,6 +113,7 @@ function findCvVariants(person, variant) {
     const cvsDir = path.join(personDir, 'cvs');
     if (!fs.existsSync(cvsDir)) {
       console.error(`No cvs/ folder for "${name}": ${cvsDir}`);
+      process.exitCode = 1;
       continue;
     }
 
@@ -111,6 +125,7 @@ function findCvVariants(person, variant) {
       const jsonPath = path.join(cvsDir, file);
       if (!fs.existsSync(jsonPath)) {
         console.error(`CV variant not found: ${jsonPath}`);
+        process.exitCode = 1;
         continue;
       }
       variants.push({ personDir, jsonPath });
@@ -122,6 +137,7 @@ function findCvVariants(person, variant) {
 async function generatePDFs(person = null, variant = null) {
   if (!fs.existsSync(PEOPLE_DIR)) {
     console.error(`People directory not found at: ${PEOPLE_DIR}`);
+    process.exitCode = 1;
     return;
   }
 
@@ -150,6 +166,7 @@ async function generatePDFs(person = null, variant = null) {
     }
   } catch (error) {
     console.error('Error generating PDFs:', error);
+    process.exitCode = 1;
   } finally {
     await browser.close();
   }
@@ -160,4 +177,5 @@ const [person = null, variant = null] = process.argv.slice(2);
 
 generatePDFs(person, variant).catch(error => {
   console.error('Error in main process:', error);
+  process.exitCode = 1;
 });

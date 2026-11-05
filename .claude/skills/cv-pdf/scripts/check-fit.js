@@ -107,6 +107,11 @@ async function checkFit(person, variant) {
     fs.mkdirSync(path.dirname(previewPath), { recursive: true });
     await page.screenshot({ path: previewPath, fullPage: false });
 
+    if (!report.main || !report.sidebar) {
+      console.error('Fit check failed: the layout has no .main-content or .sidebar element to measure.');
+      return 2;
+    }
+
     const mainOver = Math.round(report.main?.overflowPx || 0);
     const sideOver = Math.round(report.sidebar?.overflowPx || 0);
     const pageH = report.pageHeight;
